@@ -1,0 +1,39 @@
+services:
+  biocrypt-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: biocrypt_app
+    restart: always
+    ports:
+      - "8000:8000"
+    environment:
+      - SECRET_KEY=biocrypt-sih2026-production-super-secret-key-9942
+      - ACCESS_TOKEN_EXPIRE_MINUTES=1440
+      - DATABASE_URL=sqlite:////app/biocrypt.db
+      # For production PostgreSQL, uncomment below and comment the SQLite line:
+      # - DATABASE_URL=postgresql://biocrypt_user:biocrypt_secure_pass_2026@postgres-db:5432/biocrypt
+    volumes:
+      - biocrypt_data:/app/uploads
+      - biocrypt_reports:/app/generated_reports
+    # depends_on:
+    #   - postgres-db
+
+  # Optional Production PostgreSQL service (uncomment if using PostgreSQL container):
+  # postgres-db:
+  #   image: postgres:16-alpine
+  #   container_name: biocrypt_postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USER: biocrypt_user
+  #     POSTGRES_PASSWORD: biocrypt_secure_pass_2026
+  #     POSTGRES_DB: biocrypt
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  biocrypt_data:
+  biocrypt_reports:
+  # postgres_data:
